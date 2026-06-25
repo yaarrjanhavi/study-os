@@ -152,10 +152,10 @@ export default function YouTubePlayer({ videos, saveVideos }: YouTubePlayerProps
   };
 
   return (
-    <div className="h-full flex gap-6 select-none">
+    <div className="lg:h-full flex flex-col lg:flex-row gap-6 select-none">
       
       {/* 1. Sidebar Lecture library */}
-      <div className="w-80 flex flex-col gap-4 h-full border-r border-stone/30 pr-6 shrink-0">
+      <div className="w-full lg:w-80 flex flex-col gap-4 lg:h-full border-b lg:border-b-0 lg:border-r border-stone/30 pb-6 lg:pb-0 lg:pr-6 shrink-0">
         <span className="font-serif text-sm font-bold text-viridian">Lectures Library</span>
 
         <form onSubmit={handleAddVideo} className="flex gap-2 shrink-0">
@@ -174,7 +174,7 @@ export default function YouTubePlayer({ videos, saveVideos }: YouTubePlayerProps
           </button>
         </form>
 
-        <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+        <div className="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[200px] lg:max-h-none">
           {videos.map(v => (
             <div
               key={v.id}
@@ -208,10 +208,10 @@ export default function YouTubePlayer({ videos, saveVideos }: YouTubePlayerProps
       </div>
 
       {/* 2. Main Player Canvas */}
-      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-6 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:h-full lg:overflow-hidden">
         
         {/* Left Column: Player & Timestamps checklist */}
-        <div className="lg:col-span-7 flex flex-col gap-4 h-full overflow-y-auto pr-1">
+        <div className="lg:col-span-7 flex flex-col gap-4 lg:h-full lg:overflow-y-auto pr-1">
           
           {/* Iframe Distraction-Free player */}
           <div className="w-full aspect-video rounded-3xl overflow-hidden border border-stone bg-black shadow-calm relative">
@@ -252,7 +252,7 @@ export default function YouTubePlayer({ videos, saveVideos }: YouTubePlayerProps
           </div>
 
           {/* Saved Timestamps list */}
-          <div className="glass-card p-5 rounded-3xl border border-stone/60 flex flex-col gap-3 shadow-soft flex-1 overflow-y-auto">
+          <div className="glass-card p-5 rounded-3xl border border-stone/60 flex flex-col gap-3 shadow-soft flex-1 overflow-y-auto min-h-[200px]">
             <span className="font-serif text-xs font-bold text-viridian">Saved Lecture Landmarks</span>
             <div className="space-y-2">
               {activeVideo?.savedTimestamps.map((t, idx) => (
@@ -289,7 +289,7 @@ export default function YouTubePlayer({ videos, saveVideos }: YouTubePlayerProps
         </div>
 
         {/* Right Column: Side-by-side Note taking & Transcript navigation */}
-        <div className="lg:col-span-5 flex flex-col gap-6 h-full overflow-hidden">
+        <div className="lg:col-span-5 flex flex-col gap-6 lg:h-full lg:overflow-hidden min-h-[300px]">
           
           {/* Side Notes */}
           <div className="glass-card p-5 rounded-3xl border border-stone/60 flex flex-col gap-3 shadow-soft h-[50%]">

@@ -207,10 +207,10 @@ export default function KnowledgeGraph({
   };
 
   return (
-    <div className="h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 select-none relative">
+    <div className="lg:h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 select-none relative">
       
       {/* 1. Interactive SVG Canvas graph */}
-      <div className="lg:col-span-8 flex flex-col h-full bg-shell-dark/15 rounded-3xl border border-stone/50 overflow-hidden relative shadow-soft min-h-[320px]">
+      <div className="lg:col-span-8 flex flex-col lg:h-full bg-shell-dark/15 rounded-3xl border border-stone/50 overflow-hidden relative shadow-soft min-h-[320px]">
         {/* Header */}
         <div className="h-14 border-b border-stone/30 bg-shell/70 px-6 flex justify-between items-center shrink-0">
           <span className="font-serif text-xs font-bold text-viridian flex items-center gap-1.5">
@@ -289,7 +289,7 @@ export default function KnowledgeGraph({
       </div>
 
       {/* 2. Side details inspector panel */}
-      <div className="lg:col-span-4 glass-card p-6 rounded-3xl border border-stone/50 shadow-soft h-full flex flex-col gap-4 overflow-y-auto">
+      <div className="lg:col-span-4 glass-card p-6 rounded-3xl border border-stone/50 shadow-soft lg:h-full flex flex-col gap-4 overflow-y-auto min-h-[220px]">
         <span className="font-serif text-sm font-bold text-viridian">Concept Inspector</span>
 
         {activeNode && originalData ? (

@@ -253,7 +253,7 @@ export default function ExamPlanner({
   };
 
   return (
-    <div className="h-full flex flex-col gap-6 select-none">
+    <div className="lg:h-full flex flex-col gap-6 select-none relative">
       
       {/* 1. Header controls */}
       <div className="flex justify-between items-center shrink-0">
@@ -344,10 +344,10 @@ export default function ExamPlanner({
       </AnimatePresence>
 
       {/* 3. Main Grid layout: Timetable + Calendar + AI planner */}
-      <div className="flex-1 grid lg:grid-cols-12 gap-6 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:overflow-hidden">
         
         {/* LEFT COLUMN: Exams Timetable list */}
-        <div className="lg:col-span-4 flex flex-col gap-3 h-full overflow-hidden">
+        <div className="lg:col-span-4 flex flex-col gap-3 lg:h-full lg:overflow-hidden min-h-[220px]">
           <span className="font-serif text-xs font-bold text-viridian shrink-0">Exams Timetable</span>
           <div className="flex-1 overflow-y-auto space-y-2 pr-1">
             {exams.map(ex => {
@@ -400,7 +400,7 @@ export default function ExamPlanner({
         </div>
 
         {/* CENTER COLUMN: Calendar view */}
-        <div className="lg:col-span-4 glass-card p-5 rounded-3xl border border-stone/50 shadow-soft flex flex-col gap-3 bg-shell/65 h-fit overflow-hidden">
+        <div className="lg:col-span-4 glass-card p-5 rounded-3xl border border-stone/50 shadow-soft flex flex-col gap-3 bg-shell/65 h-fit">
           <div className="flex justify-between items-center shrink-0">
             <span className="font-serif text-xs font-bold text-viridian">
               {monthNames[currentMonth]} {currentYear}
@@ -476,7 +476,7 @@ export default function ExamPlanner({
         </div>
 
         {/* RIGHT COLUMN: AI Study Planner */}
-        <div className="lg:col-span-4 glass-card p-5 rounded-3xl border border-stone/50 shadow-soft bg-shell/65 flex flex-col gap-4 h-full overflow-hidden">
+        <div className="lg:col-span-4 glass-card p-5 rounded-3xl border border-stone/50 shadow-soft bg-shell/65 flex flex-col gap-4 lg:h-full lg:overflow-hidden min-h-[300px]">
           <span className="font-serif text-xs font-bold text-viridian shrink-0">Portion Coverer</span>
 
           {activeExam ? (

@@ -208,7 +208,7 @@ export default function SmartTodo({ tasks, apiKey, saveTasks }: SmartTodoProps) 
   ];
 
   return (
-    <div className="h-full flex flex-col gap-6 select-none">
+    <div className="lg:h-full flex flex-col gap-6 select-none">
       
       {/* 1. Header input form */}
       <div className="glass-card p-5 rounded-[2rem] border border-stone/50 shadow-soft shrink-0">
@@ -269,14 +269,14 @@ export default function SmartTodo({ tasks, apiKey, saveTasks }: SmartTodoProps) 
       </div>
 
       {/* 2. Three Columns Kanban workspace */}
-      <div className="flex-1 grid md:grid-cols-3 gap-6 overflow-hidden">
+      <div className="flex-1 grid lg:grid-cols-3 gap-6 lg:overflow-hidden">
         {columns.map(col => {
           const colTasks = tasks.filter(t => t.column === col.id);
           
           return (
             <div 
               key={col.id}
-              className={`rounded-[2rem] border p-5 flex flex-col gap-4 h-full overflow-hidden ${col.style}`}
+              className={`rounded-[2rem] border p-5 flex flex-col gap-4 lg:h-full lg:overflow-hidden min-h-[300px] ${col.style}`}
             >
               <div className="flex justify-between items-center shrink-0">
                 <span className="font-serif text-xs font-bold text-viridian flex items-center gap-1.5">

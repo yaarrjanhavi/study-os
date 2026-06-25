@@ -305,10 +305,10 @@ export default function AINotes({
   };
 
   return (
-    <div className="h-full flex gap-6 select-none relative">
+    <div className="lg:h-full flex flex-col lg:flex-row gap-6 select-none relative">
       
       {/* 1. Folders & Notes Navigation list */}
-      <div className="w-80 flex flex-col gap-4 h-full border-r border-stone/30 pr-6 shrink-0">
+      <div className="w-full lg:w-80 flex flex-col gap-4 lg:h-full border-b lg:border-b-0 lg:border-r border-stone/30 pb-6 lg:pb-0 lg:pr-6 shrink-0">
         <div className="flex justify-between items-center shrink-0">
           <span className="font-serif text-sm font-bold text-viridian">Study Notes</span>
           <button 
@@ -376,7 +376,7 @@ export default function AINotes({
         </div>
 
         {/* Notes Items List */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+        <div className="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[220px] lg:max-h-none">
           {filteredNotes.map((note) => (
             <div
               key={note.id}
@@ -432,7 +432,7 @@ export default function AINotes({
       </div>
 
       {/* 2. Text Editor Canvas */}
-      <div className="flex-1 flex flex-col h-full bg-shell-dark/15 rounded-3xl border border-stone/50 overflow-hidden relative shadow-soft">
+      <div className="flex-1 flex flex-col lg:h-full bg-shell-dark/15 rounded-3xl border border-stone/50 overflow-hidden relative shadow-soft min-h-[360px]">
         {activeNote ? (
           <>
             {/* Editor Top Options Strip */}
