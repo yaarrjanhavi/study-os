@@ -60,7 +60,7 @@ export default function LandingPage() {
         className="sticky top-4 z-50 mx-auto w-[90%] max-w-6xl"
       >
         <div className="glass-card px-4 md:px-6 py-3 md:py-4 rounded-3xl flex justify-between items-center shadow-soft">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
             <img 
               src="/logo (light).png" 
               alt="StudyOS Logo" 
@@ -86,7 +86,7 @@ export default function LandingPage() {
                   audio.play().catch(() => {});
                 } catch(e){}
               }}
-              className="bg-viridian hover:bg-viridian-hover text-shell text-xs md:text-sm font-mono px-3.5 py-2 md:px-5 md:py-2.5 rounded-xl transition-all shadow-soft flex items-center gap-1.5 md:gap-2"
+              className="bg-viridian hover:bg-viridian-hover text-shell text-xs md:text-sm font-mono px-3.5 py-2 md:px-5 md:py-2.5 rounded-xl transition-all shadow-soft flex items-center gap-1.5 md:gap-2 whitespace-nowrap shrink-0"
             >
               <span className="hidden sm:inline">Open Workspace</span>
               <span className="sm:hidden">Open</span>
