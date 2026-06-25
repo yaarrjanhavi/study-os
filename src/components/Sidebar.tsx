@@ -13,7 +13,9 @@ import {
   Flame,
   Award,
   GitBranch,
-  Calendar
+  Calendar,
+  Coffee,
+  Lock
 } from "lucide-react";
 
 interface SidebarProps {
@@ -25,6 +27,7 @@ interface SidebarProps {
   tasksCount: number;
   theme: string;
   username: string;
+  timerMode: "focus" | "shortBreak" | "longBreak";
 }
 
 export default function Sidebar({
@@ -36,6 +39,7 @@ export default function Sidebar({
   tasksCount,
   theme,
   username,
+  timerMode,
 }: SidebarProps) {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -44,6 +48,13 @@ export default function Sidebar({
     { id: "timer", label: "Study Timer", icon: <Clock className="w-4 h-4" /> },
     { id: "exams", label: "Exam Planner", icon: <Calendar className="w-4 h-4" /> },
     { id: "flashcards", label: "Flashcards", icon: <Award className="w-4 h-4" /> },
+    { 
+      id: "breaks", 
+      label: "Mind Breaks", 
+      icon: timerMode === "shortBreak" || timerMode === "longBreak" 
+        ? <Coffee className="w-4 h-4 text-orange-600 animate-pulse" /> 
+        : <Lock className="w-4 h-4 text-viridian/45" /> 
+    },
     { id: "chat", label: "AI Chat", icon: <Sparkles className="w-4 h-4" /> },
     { id: "videos", label: "Videos", icon: <Tv className="w-4 h-4" /> },
     { id: "pdfs", label: "PDFs", icon: <FileText className="w-4 h-4" /> },

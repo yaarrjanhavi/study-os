@@ -33,6 +33,7 @@ import KnowledgeGraph from "@/components/KnowledgeGraph";
 import GlobalSearch from "@/components/GlobalSearch";
 import Settings from "@/components/Settings";
 import ExamPlanner, { Exam } from "@/components/ExamPlanner";
+import MindBreaks from "@/components/MindBreaks";
 
 // Type definitions
 export interface Note {
@@ -127,6 +128,14 @@ export default function DashboardPage() {
   const [tempName, setTempName] = useState("");
   const [onboardingStep, setOnboardingStep] = useState(1);
   const [tempApiKey, setTempApiKey] = useState("");
+  
+  // Lifted Active Timer States
+  const [timerTimeLeft, setTimerTimeLeft] = useState(25 * 60);
+  const [timerDuration, setTimerDuration] = useState(25); // in minutes
+  const [timerMode, setTimerMode] = useState<"focus" | "shortBreak" | "longBreak">("focus");
+  const [timerIsRunning, setTimerIsRunning] = useState(false);
+  const [timerIsMuted, setTimerIsMuted] = useState(false);
+  const [hasBreakExtensionBeenUsed, setHasBreakExtensionBeenUsed] = useState(false);
   
   // Theme State
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -235,6 +244,97 @@ export default function DashboardPage() {
       bgAudio.pause();
     };
   }, []);
+
+  // Countdown Timer ticking loop
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (timerIsRunning) {
+      interval = setInterval(() => {
+        setTimerTimeLeft((prev) => {
+          if (prev <= 1) {
+            handleTimerComplete();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (interval) clearInterval(interval);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timerIsRunning, timerMode, timerDuration]);
+
+  const handleTimerComplete = () => {
+    setTimerIsRunning(false);
+
+    // Audio chime bell
+    if (!timerIsMuted) {
+      try {
+        const chime = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav");
+        chime.volume = 0.5;
+        chime.play().catch(err => {
+          console.log("Audio chime playback blocked by browser:", err);
+        });
+      } catch (err) {
+        console.log("Audio chime playback blocked by browser.");
+      }
+    }
+
+    // Trigger full splash confetti
+    confetti({
+      particleCount: 100,
+      spread: 90,
+      origin: { y: 0.6 },
+      colors: ["#D5E3E8", "#E4E3BC", "#344945"]
+    });
+
+    // Log Completed session to history
+    const session: PomodoroSession = {
+      id: `th-${Date.now()}`,
+      duration: timerDuration,
+      type: timerMode,
+      date: new Date().toISOString()
+    };
+
+    saveTimerHistory([session, ...timerHistory]);
+
+    // Update streak if it was a Focus session
+    if (timerMode === "focus") {
+      const nextStreak = streak + 1;
+      setStreak(nextStreak);
+      localStorage.setItem("studyos_streak", String(nextStreak));
+      alert("Wonderful focus block completed! Take a soft, peaceful break.");
+      
+      setTimerMode("shortBreak");
+      setTimerDuration(5);
+      setTimerTimeLeft(5 * 60);
+      setHasBreakExtensionBeenUsed(false);
+      
+      // Auto redirect to mind breaks
+      setActiveTab("breaks");
+    } else {
+      // Break timer completed (either 5m, 15m, or the 3m extension)
+      alert("Break's over 🌿 Time to get back to studying.");
+      
+      setTimerMode("focus");
+      setTimerDuration(25);
+      setTimerTimeLeft(25 * 60);
+      setHasBreakExtensionBeenUsed(false);
+      
+      if (activeTab === "breaks") {
+        setActiveTab("dashboard");
+      }
+    }
+  };
+
+  const handleExtendBreak = () => {
+    if (hasBreakExtensionBeenUsed) return;
+    setHasBreakExtensionBeenUsed(true);
+    setTimerTimeLeft((prev) => prev + 3 * 60);
+    setTimerIsRunning(true);
+  };
 
   // Save hook helper functions
   const toggleTheme = () => {
@@ -383,10 +483,35 @@ export default function DashboardPage() {
       case "timer":
         return (
           <StudyTimer 
+            timeLeft={timerTimeLeft}
+            setTimeLeft={setTimerTimeLeft}
+            duration={timerDuration}
+            setDuration={setTimerDuration}
+            mode={timerMode}
+            setMode={setTimerMode}
+            isRunning={timerIsRunning}
+            setIsRunning={setTimerIsRunning}
+            isMuted={timerIsMuted}
+            setIsMuted={setTimerIsMuted}
             timerHistory={timerHistory}
             saveTimerHistory={saveTimerHistory}
             streak={streak}
             setStreak={setStreak}
+          />
+        );
+      case "breaks":
+        return (
+          <MindBreaks 
+            timerTimeLeft={timerTimeLeft}
+            timerMode={timerMode}
+            timerIsRunning={timerIsRunning}
+            setTimerIsRunning={setTimerIsRunning}
+            hasBreakExtensionBeenUsed={hasBreakExtensionBeenUsed}
+            handleExtendBreak={handleExtendBreak}
+            setActiveTab={setActiveTab}
+            setTimerMode={setTimerMode}
+            setTimerDuration={setTimerDuration}
+            setTimerTimeLeft={setTimerTimeLeft}
           />
         );
       case "exams":
@@ -513,6 +638,7 @@ export default function DashboardPage() {
         tasksCount={tasks.filter(t => t.column !== "done").length}
         theme={theme}
         username={username}
+        timerMode={timerMode}
       />
 
       {/* Main Workspace Frame */}

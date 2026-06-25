@@ -17,6 +17,16 @@ import confetti from "canvas-confetti";
 import { PomodoroSession } from "../app/dashboard/page";
 
 interface StudyTimerProps {
+  timeLeft: number;
+  setTimeLeft: (time: number | ((prev: number) => number)) => void;
+  duration: number;
+  setDuration: (duration: number) => void;
+  mode: "focus" | "shortBreak" | "longBreak";
+  setMode: (mode: "focus" | "shortBreak" | "longBreak") => void;
+  isRunning: boolean;
+  setIsRunning: (running: boolean) => void;
+  isMuted: boolean;
+  setIsMuted: (muted: boolean) => void;
   timerHistory: PomodoroSession[];
   saveTimerHistory: (history: PomodoroSession[]) => void;
   streak: number;
@@ -24,22 +34,23 @@ interface StudyTimerProps {
 }
 
 export default function StudyTimer({
+  timeLeft,
+  setTimeLeft,
+  duration,
+  setDuration,
+  mode,
+  setMode,
+  isRunning,
+  setIsRunning,
+  isMuted,
+  setIsMuted,
   timerHistory,
   saveTimerHistory,
   streak,
   setStreak
 }: StudyTimerProps) {
-  // Modes: 'focus' (25m), 'shortBreak' (5m), 'longBreak' (15m)
-  const [mode, setMode] = useState<"focus" | "shortBreak" | "longBreak">("focus");
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
-  const [duration, setDuration] = useState(25); // in minutes
-  const [isRunning, setIsRunning] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  
   // Clean Focus View Mode
   const [distractionFree, setDistractionFree] = useState(false);
-
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Mode durations maps
   const defaultDurations = {
@@ -48,83 +59,12 @@ export default function StudyTimer({
     longBreak: 15
   };
 
-  // Sync timer when mode or custom duration changes
-  useEffect(() => {
+  const handleModeChange = (newMode: "focus" | "shortBreak" | "longBreak") => {
     setIsRunning(false);
-    if (timerRef.current) clearInterval(timerRef.current);
-    
-    const minutes = defaultDurations[mode];
-    setDuration(minutes);
-    setTimeLeft(minutes * 60);
-  }, [mode]);
-
-  // Main countdown ticking hook
-  useEffect(() => {
-    if (isRunning) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            // Timer Finished!
-            handleTimerComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else {
-      if (timerRef.current) clearInterval(timerRef.current);
-    }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isRunning, mode]);
-
-  const handleTimerComplete = () => {
-    setIsRunning(false);
-    if (timerRef.current) clearInterval(timerRef.current);
-
-    // Audio chime bell
-    if (!isMuted) {
-      try {
-        const chime = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav");
-        chime.volume = 0.5;
-        chime.play().catch(err => {
-          console.log("Audio chime playback blocked by browser:", err);
-        });
-      } catch (err) {
-        console.log("Audio chime playback blocked by browser.");
-      }
-    }
-
-    // Trigger full splash confetti
-    confetti({
-      particleCount: 100,
-      spread: 90,
-      origin: { y: 0.6 },
-      colors: ["#D5E3E8", "#E4E3BC", "#344945"]
-    });
-
-    // Log Completed session to history
-    const session: PomodoroSession = {
-      id: `th-${Date.now()}`,
-      duration: duration,
-      type: mode,
-      date: new Date().toISOString()
-    };
-
-    saveTimerHistory([session, ...timerHistory]);
-
-    // Update streak if it was a Focus session
-    if (mode === "focus") {
-      setStreak(streak + 1);
-      localStorage.setItem("studyos_streak", String(streak + 1));
-      alert("Wonderful focus block completed! Take a soft, peaceful break.");
-      setMode("shortBreak");
-    } else {
-      alert("Break completed! Ready to flow back into focus?");
-      setMode("focus");
-    }
+    setMode(newMode);
+    const mins = defaultDurations[newMode];
+    setDuration(mins);
+    setTimeLeft(mins * 60);
   };
 
   const handleToggleTimer = () => {
@@ -164,21 +104,21 @@ export default function StudyTimer({
           className="flex gap-3 justify-center border border-stone/50 bg-stone/20 p-1.5 rounded-[2rem] shadow-soft shrink-0"
         >
           <button
-            onClick={() => setMode("focus")}
+            onClick={() => handleModeChange("focus")}
             className={`flex items-center gap-1.5 font-mono text-[10px] px-5 py-2.5 rounded-[1.5rem] transition-all ${mode === "focus" ? "bg-viridian text-shell font-bold" : "text-viridian/70 hover:bg-stone"}`}
           >
             <Clock className="w-3.5 h-3.5" />
             Focus Session
           </button>
           <button
-            onClick={() => setMode("shortBreak")}
+            onClick={() => handleModeChange("shortBreak")}
             className={`flex items-center gap-1.5 font-mono text-[10px] px-5 py-2.5 rounded-[1.5rem] transition-all ${mode === "shortBreak" ? "bg-viridian text-shell font-bold" : "text-viridian/70 hover:bg-stone"}`}
           >
             <Coffee className="w-3.5 h-3.5" />
             Short Break
           </button>
           <button
-            onClick={() => setMode("longBreak")}
+            onClick={() => handleModeChange("longBreak")}
             className={`flex items-center gap-1.5 font-mono text-[10px] px-5 py-2.5 rounded-[1.5rem] transition-all ${mode === "longBreak" ? "bg-viridian text-shell font-bold" : "text-viridian/70 hover:bg-stone"}`}
           >
             <Coffee className="w-3.5 h-3.5" />
