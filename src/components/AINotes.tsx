@@ -14,7 +14,7 @@ import {
   FileText,
   FileSpreadsheet,
   BrainCircuit,
-  MessageSquareHelp,
+  CircleHelp,
   ArrowRight,
   Smile
 } from "lucide-react";
@@ -496,7 +496,7 @@ export default function AINotes({
                   className="flex items-center gap-1 font-mono text-[9px] text-viridian hover:bg-stone/30 border border-stone/70 px-2.5 py-1.5 rounded-xl transition-all"
                   title="Convert note into multiple choice study quizzes"
                 >
-                  <MessageSquareHelp className="w-3.5 h-3.5 text-viridian" />
+                  <CircleHelp className="w-3.5 h-3.5 text-viridian" />
                   Quiz Me
                 </button>
                 <button
