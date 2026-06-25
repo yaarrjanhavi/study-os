@@ -59,7 +59,7 @@ export default function LandingPage() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-4 z-50 mx-auto w-[90%] max-w-6xl"
       >
-        <div className="glass-card px-6 py-4 rounded-3xl flex justify-between items-center shadow-soft">
+        <div className="glass-card px-4 md:px-6 py-3 md:py-4 rounded-3xl flex justify-between items-center shadow-soft">
           <Link href="/" className="flex items-center gap-2 group">
             <img 
               src="/logo (light).png" 
@@ -86,10 +86,11 @@ export default function LandingPage() {
                   audio.play().catch(() => {});
                 } catch(e){}
               }}
-              className="bg-viridian hover:bg-viridian-hover text-shell text-sm font-mono px-5 py-2.5 rounded-xl transition-all shadow-soft flex items-center gap-2"
+              className="bg-viridian hover:bg-viridian-hover text-shell text-xs md:text-sm font-mono px-3.5 py-2 md:px-5 md:py-2.5 rounded-xl transition-all shadow-soft flex items-center gap-1.5 md:gap-2"
             >
-              Open Workspace
-              <ArrowRight className="w-4 h-4" />
+              <span className="hidden sm:inline">Open Workspace</span>
+              <span className="sm:hidden">Open</span>
+              <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </Link>
           </div>
         </div>
