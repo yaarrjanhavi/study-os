@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Warm-pastel palette (Light Mode - slightly deeper for less brightness glare) */
+  --color-shell: #EFECE6; /* Deeper calming background */
+  --color-shell-dark: #E6E2D8;
+  --color-stone: #DAD6C9; /* Darker cards */
+  --color-stone-light: #E4E1D6;
+  --color-stone-dark: #CDC8BA;
+  --color-sky: #C9DBE0; /* Muted Accent */
+  --color-sky-light: #DAE7EA;
+  --color-sky-dark: #B5CBD3;
+  --color-honeydew: #DAD8AC;
+  --color-honeydew-light: #E7E6C4;
+  --color-honeydew-dark: #CBC998;
+  --color-viridian: #344945; /* Dark Viridian text */
+  --color-viridian-light: #435D58;
+  --color-viridian-dark: #253431;
+  
+  --color-text: #344945;
+  --color-border: rgba(52, 73, 69, 0.15);
+  --color-glass: rgba(230, 226, 216, 0.65);
+}
+
+.dark {
+  /* Peaceful forest-green / dark stone theme (Dark Mode) */
+  --color-shell: #1B2422; /* Very deep dark forest green */
+  --color-shell-dark: #141B1A;
+  --color-stone: #253330; /* Forest slate cards */
+  --color-stone-light: #2E403C;
+  --color-stone-dark: #192321;
+  --color-sky: #4A605C; /* Accent slate-green */
+  --color-sky-light: #58736E;
+  --color-sky-dark: #3C4E4B;
+  --color-honeydew: #D6D5AF;
+  --color-honeydew-light: #C4C39B;
+  --color-honeydew-dark: #A1A077;
+  --color-viridian: #EFECE6; /* Inverts text to light warm shell color */
+  --color-viridian-light: #DAD6C9;
+  --color-viridian-dark: #FFFFFF;
+  
+  --color-text: #EFECE6;
+  --color-border: rgba(230, 226, 216, 0.12);
+  --color-glass: rgba(37, 51, 48, 0.65);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-shell);
+    color: var(--color-text);
+    font-family: var(--font-geist-mono), monospace;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-averia-serif), serif;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  input, textarea, select {
+    background-color: var(--color-shell-dark) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+    transition: all 0.3s ease;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--color-text) !important;
+    opacity: 0.55 !important;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--color-text) !important;
+    outline: none !important;
+  }
+}
+
+@layer utilities {
+  /* Calming ambient background mesh */
+  .calm-mesh {
+    background: radial-gradient(at 10% 20%, rgba(228, 227, 188, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, rgba(213, 227, 232, 0.25) 0px, transparent 50%),
+                radial-gradient(at 50% 80%, rgba(224, 220, 209, 0.15) 0px, transparent 50%);
+    background-color: var(--color-shell);
+  }
+
+  /* Glassmorphism cards */
+  .glass-card {
+    background: var(--color-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
+  }
+
+  .glass-card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-card-hover:hover {
+    background: var(--color-glass);
+    border-color: var(--color-text);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -10px rgba(52, 73, 69, 0.08);
+  }
+
+  /* Custom minimal scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-shell);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-stone-dark);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text);
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 0.95; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.01); }
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 3s ease-in-out infinite;
+}
+
+/* Swaying animation for plants */
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
+}
+
+.animate-sway {
+  animation: sway 6s ease-in-out infinite;
+}
+
+.page-fade-enter {
+  opacity: 0;
+  transform: translateY(4px);
+}
+.page-fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+/* Styled text selection */
+::selection {
+  background-color: var(--color-sky);
+  color: var(--color-text);
+}
