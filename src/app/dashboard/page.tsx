@@ -125,6 +125,8 @@ export default function DashboardPage() {
   // Onboarding States
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [tempName, setTempName] = useState("");
+  const [onboardingStep, setOnboardingStep] = useState(1);
+  const [tempApiKey, setTempApiKey] = useState("");
   
   // Theme State
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -310,6 +312,12 @@ export default function DashboardPage() {
     if (!tempName.trim()) return;
     setUsername(tempName.trim());
     localStorage.setItem("studyos_username", tempName.trim());
+    
+    if (tempApiKey.trim()) {
+      setGeminiApiKey(tempApiKey.trim());
+      localStorage.setItem("studyos_apikey", tempApiKey.trim());
+    }
+
     setShowOnboarding(false);
     
     // burst confetti
@@ -591,7 +599,7 @@ export default function DashboardPage() {
         setActiveTab={setActiveTab}
       />
 
-      {/* Onboarding Name Modal */}
+      {/* Onboarding Multi-Step Modal */}
       <AnimatePresence>
         {showOnboarding && (
           <div className="fixed inset-0 bg-viridian/40 backdrop-blur-md z-50 flex items-center justify-center p-6 select-none">
@@ -599,42 +607,135 @@ export default function DashboardPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md bg-shell p-8 md:p-10 rounded-[2.5rem] border border-stone shadow-calm text-center flex flex-col items-center gap-6"
+              className="w-full max-w-md md:max-w-lg bg-shell p-6 md:p-8 rounded-[2.5rem] border border-stone shadow-calm text-center flex flex-col items-center gap-5 max-h-[90vh] overflow-y-auto"
             >
               <img 
                 src="/logo (light).png" 
                 alt="StudyOS Logo" 
-                className="w-12 h-12 object-contain"
-              />
-              <div className="flex flex-col gap-2">
-                <h2 className="font-serif text-2xl font-bold text-viridian tracking-tight">
-                  Welcome to StudyOS
-                </h2>
-                <p className="font-mono text-xs text-viridian/60 leading-normal">
-                  Let&apos;s prepare your digital study desk. What should we call you?
-                </p>
-              </div>
-
-              <input
-                type="text"
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                placeholder="Enter your name..."
-                className="w-full px-4 py-3 rounded-xl border border-stone/80 bg-shell/50 font-mono text-xs text-viridian placeholder-viridian/45 text-center focus:outline-none focus:border-viridian transition-all focus:bg-shell"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && tempName.trim()) {
-                    handleCompleteOnboarding();
-                  }
-                }}
+                className="w-10 h-10 object-contain"
               />
 
-              <button
-                onClick={handleCompleteOnboarding}
-                disabled={!tempName.trim()}
-                className="w-full bg-viridian hover:bg-viridian-hover disabled:bg-viridian/45 text-shell font-mono text-xs py-3.5 rounded-xl transition-all shadow-soft font-bold"
-              >
-                Begin Studying
-              </button>
+              {onboardingStep === 1 && (
+                <div className="flex flex-col items-center gap-5 w-full">
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-serif text-2xl font-bold text-viridian tracking-tight">
+                      Welcome to StudyOS
+                    </h2>
+                    <p className="font-mono text-xs text-viridian/60 leading-normal">
+                      Let&apos;s prepare your digital study desk. What should we call you?
+                    </p>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={tempName}
+                    onChange={(e) => setTempName(e.target.value)}
+                    placeholder="Enter your name..."
+                    className="w-full px-4 py-3 rounded-xl border border-stone/80 bg-shell/50 font-mono text-xs text-viridian placeholder-viridian/45 text-center focus:outline-none focus:border-viridian transition-all focus:bg-shell"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && tempName.trim()) {
+                        setOnboardingStep(2);
+                      }
+                    }}
+                  />
+
+                  <button
+                    onClick={() => setOnboardingStep(2)}
+                    disabled={!tempName.trim()}
+                    className="w-full bg-viridian hover:bg-viridian-hover disabled:bg-viridian/45 text-shell font-mono text-xs py-3.5 rounded-xl transition-all shadow-soft font-bold"
+                  >
+                    Continue
+                  </button>
+                </div>
+              )}
+
+              {onboardingStep === 2 && (
+                <div className="flex flex-col items-center gap-4 w-full">
+                  <div className="flex flex-col gap-1.5">
+                    <h2 className="font-serif text-xl font-bold text-viridian tracking-tight flex items-center justify-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-viridian animate-pulse-soft" />
+                      Activate Lumi AI Tutor
+                    </h2>
+                    <p className="font-mono text-[10px] text-viridian/65 leading-relaxed">
+                      Lumi AI powers notes explanation, chapters digests, formula extractions, and exam planners. You can generate a secure key for free.
+                    </p>
+                  </div>
+
+                  <div className="w-full bg-sky/30 border border-sky-dark/25 rounded-2xl p-4 text-left font-mono text-[9px] text-viridian/85 flex flex-col gap-2">
+                    <span className="font-bold flex items-center gap-1">How to get a key:</span>
+                    <ol className="list-decimal pl-4 space-y-1">
+                      <li>
+                        Open{" "}
+                        <a 
+                          href="https://aistudio.google.com/" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="font-bold underline hover:text-viridian-dark"
+                        >
+                          aistudio.google.com
+                        </a>
+                      </li>
+                      <li>Click the blue <strong>&quot;Create API Key&quot;</strong> button.</li>
+                      <li>Copy the long code (starts with <code>AIza...</code>) and paste it below.</li>
+                    </ol>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={tempApiKey}
+                    onChange={(e) => setTempApiKey(e.target.value)}
+                    placeholder="Paste Gemini API Key (Optional)..."
+                    className="w-full px-4 py-3 rounded-xl border border-stone/80 bg-shell/50 font-mono text-xs text-viridian placeholder-viridian/45 text-center focus:outline-none focus:border-viridian transition-all focus:bg-shell"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        setOnboardingStep(3);
+                      }
+                    }}
+                  />
+
+                  <div className="flex flex-col gap-2.5 w-full mt-1">
+                    <button
+                      onClick={() => setOnboardingStep(3)}
+                      className="w-full bg-viridian hover:bg-viridian-hover text-shell font-mono text-xs py-3.5 rounded-xl transition-all shadow-soft font-bold"
+                    >
+                      {tempApiKey.trim() ? "Activate & Continue" : "Continue in Demo Mode"}
+                    </button>
+                    
+                    {!tempApiKey.trim() && (
+                      <button
+                        onClick={() => setOnboardingStep(3)}
+                        className="font-mono text-[9px] text-viridian/60 hover:text-viridian underline transition-colors"
+                      >
+                        I will set this up later
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {onboardingStep === 3 && (
+                <div className="flex flex-col items-center gap-5 w-full">
+                  <div className="flex flex-col gap-2">
+                    <h2 className="font-serif text-2xl font-bold text-viridian tracking-tight">
+                      Ready to Learn, {tempName}!
+                    </h2>
+                    <p className="font-mono text-xs text-viridian/65 leading-relaxed">
+                      Your calming digital study desk is fully prepared.
+                    </p>
+                  </div>
+
+                  <div className="w-full bg-stone/40 border border-stone-dark/20 p-4 rounded-2xl text-center font-mono text-[10px] text-viridian/70 leading-normal">
+                    💡 <strong>Quick Tip:</strong> If you chose to skip the API key setup for now, you can configure it at any time in the <strong>Settings</strong> tab on the sidebar.
+                  </div>
+
+                  <button
+                    onClick={handleCompleteOnboarding}
+                    className="w-full bg-viridian hover:bg-viridian-hover text-shell font-mono text-xs py-3.5 rounded-xl transition-all shadow-soft font-bold flex items-center justify-center gap-2"
+                  >
+                    Begin Studying
+                  </button>
+                </div>
+              )}
             </motion.div>
           </div>
         )}
