@@ -89,7 +89,7 @@ export default function Sidebar({
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed md:relative top-0 bottom-0 left-0 w-64 border-r border-stone/30 bg-shell-dark/65 md:bg-shell-dark/30 z-50 transition-transform duration-300 flex flex-col pt-20 md:pt-0 shrink-0
+        fixed md:relative top-0 bottom-0 left-0 w-64 border-r border-stone/30 bg-shell-dark md:bg-shell-dark/30 z-50 transition-transform duration-300 flex flex-col pt-20 md:pt-0 shrink-0
         ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       `}>
         {/* Brand Logo - Desktop */}
